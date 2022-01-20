@@ -17,8 +17,10 @@ const { query } = require("express-validator");
 const RestaurantDB = require("./modules/restaurantDB.js");
 const db = new RestaurantDB();
 
-const data =
-  "mongodb+srv://Yebon:qwerty123@cluster0.ixebn.mongodb.net/sample_restaurants?retryWrites=true&w=majority";
+// use environment variable for the connection string
+require("dotenv").config();
+const { MONGODB_CONN_STRING } = process.env;
+const data = process.env.MONGODB_CONN_STRING;
 
 const app = express();
 const HTTP_PORT = process.env.PORT || 8080;
