@@ -1,1 +1,1 @@
-# web422
+# WEB422 - Assignment 1
