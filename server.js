@@ -11,6 +11,7 @@
  ********************************************************************************/
 
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const { query } = require("express-validator");
 
@@ -42,8 +43,9 @@ db.initialize(data)
 
 // ensure that the environment is set up correctly and tun the test the server locally
 app.get("/", (req, res) => {
-  res.json({ message: "API Listening" });
-  res.sendFile(index.html);
+  // res.json({ message: "API Listening" });
+
+  res.sendFile(path.join(__dirname, "./index.html"));
 });
 
 //201,404
