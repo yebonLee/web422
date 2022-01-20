@@ -1,10 +1,30 @@
 {
   "dependencies": {
     "cors": "^2.8.5",
+    "debug": "^4.3.3",
     "dotenv": "^14.2.0",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
+    "heroku": "^7.59.2",
     "mongoose": "^6.1.7",
     "nodemon": "^2.0.15"
-  }
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "restaurantapi",
+  "description": "",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yebonLee214/web422.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yebonLee214/web422/issues"
+  },
+  "homepage": "https://github.com/yebonLee214/web422#readme"
 }
