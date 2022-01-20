@@ -11,15 +11,14 @@
  ********************************************************************************/
 
 const express = require("express");
-const path = require("path");
 const cors = require("cors");
-const { query, validationResult } = require("express-validator");
+const { query } = require("express-validator");
 
 const RestaurantDB = require("./modules/restaurantDB.js");
 const db = new RestaurantDB();
 
 const data =
-  "mongodb+srv://Yebon:qwerty123@cluster0.ixebn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+  "mongodb+srv://Yebon:qwerty123@cluster0.ixebn.mongodb.net/sample_restaurants?retryWrites=true&w=majority";
 
 const app = express();
 const HTTP_PORT = process.env.PORT || 8080;
@@ -44,43 +43,82 @@ app.get("/", (req, res) => {
   res.json({ message: "API Listening" });
 });
 
+//201,404
 app.post("/api/restaurants", (req, res) => {
-  db.addNewRestaurants(req.body)
+  db.addNewRestaurant(req.body)
     .then((data) => {
-      res
-        .status(201)
-        .json({ message: "Successfully created a new restaurant." });
+      res.status(201).json(data);
     })
     .catch((err) => {
-      res.status(500).json({ message: "Failed to create a new restaurant." });
+      res
+        .status(404)
+        .json({ message: "Failed to create a new restaurant." + err.message });
     });
 });
 
 // must accept page perPage borough
+// if error 400(client) vs 500(server) -- I think the message should be appeared in client page.
 app.get(
   "/api/restaurants",
-  [query("page").isInt({ min: 1 }), query("perPage").isInt({ min: 1 })],
-  (req, res) => {
+  [
+    query("page").isInt({ min: 1 }),
+    query("perPage").isInt({ min: 1 }),
+    query("borough").isString(),
+  ],
+  async (req, res) => {
     const page = req.query.page;
-    const perPage = req.query.perPge;
+    const perPage = req.query.perPage;
     const borough = req.query.borough;
 
-    db.getAllRestaurants(page, perPage, borough).then((restaurants) => {});
+    if (page != undefined || perPage != undefined) {
+      res.json(await db.getAllRestaurants(page, perPage, borough));
+    } else {
+      res.status(400).json({ message: "Enter page and perPage" });
+    }
   }
 );
 
-app.get("/api/restaurants/:id", (req, res) => {});
+//200,404
+app.get("/api/restaurants/:id", (req, res) => {
+  db.getRestaurantById(req.params.id)
+    .then((data) => {
+      res.status(200).json({
+        data,
+      });
+    })
+    .catch((err) => {
+      res.status(404).json({
+        message:
+          "Failed to bring the restaurant data under the id of " +
+          req.params.id,
+      });
+    });
+});
 
-app.put("/api/restaurants/:id", (req, res) => {});
+//200,404
+app.put("/api/restaurants/:id", (req, res) => {
+  db.updateRestaurantById(req.body, req.params.id)
+    .then((data) => {
+      res.status(200).json({ message: "Success to update new data" });
+    })
+    .catch((err) => {
+      res.status(404).json({ message: "Failed to update new data" });
+    });
+});
 
+//204,404
 app.delete("/api/restaurants/:id", (req, res) => {
   if (req.params.id == req.body._id) {
     db.deleteRestaurantById(req.params.id)
       .then((data) => {
-        res.status(201).json({ message: "Success to delete." });
+        res.status(204).json({ message: "Success to delete." });
       })
       .catch((err) => {
-        res.status(500).json({ message: "Fail to delete." });
+        res.status(404).json({ message: "Failed to delete." });
       });
   }
+});
+
+app.use((req, res) => {
+  res.status(404).send("Resource not found");
 });
