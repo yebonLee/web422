@@ -43,6 +43,7 @@ db.initialize(data)
 // ensure that the environment is set up correctly and tun the test the server locally
 app.get("/", (req, res) => {
   res.json({ message: "API Listening" });
+  res.sendFile(index.html);
 });
 
 //201,404
