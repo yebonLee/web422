@@ -24,7 +24,7 @@ const { MONGODB_CONN_STRING } = process.env;
 const data = process.env.MONGODB_CONN_STRING;
 
 const app = express();
-const HTTP_PORT = process.env.PORT || 8080;
+const HTTP_PORT = process.env.PORT || "8080";
 
 // middleware
 app.use(express.json());
