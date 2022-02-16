@@ -19,7 +19,7 @@ const RestaurantDB = require("./modules/restaurantDB.js");
 const db = new RestaurantDB();
 
 // use environment variable for the connection string
-require("dotenv").config();
+require("dotenv").config({ path: ".env" });
 const { MONGODB_CONN_STRING } = process.env;
 const data = process.env.MONGODB_CONN_STRING;
 
